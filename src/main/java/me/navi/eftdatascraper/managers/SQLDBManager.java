@@ -30,11 +30,11 @@ public class SQLDBManager {
 
     public void replace(String name, String price) {
         String sql = """
-INSERT INTO stockPriceCash(name, datetime, price)
-VALUES(?, NOW(), ?)\s
-ON CONFLICT ON CONSTRAINT unique_name\s
-DO\s
-UPDATE SET datetime = NOW(), price = ? WHERE stockPriceCash.name = ?;""";
+                INSERT INTO stockPriceCache(name, datetime, price)
+                VALUES(?, NOW(), ?)\s
+                ON CONFLICT ON CONSTRAINT unique_name\s
+                DO\s
+                UPDATE SET datetime = NOW(), price = ? WHERE stockPriceCache.name = ?;""";
 
         try (Connection conn = this.connect();
              PreparedStatement statement = conn.prepareStatement(sql)) {
@@ -45,7 +45,7 @@ UPDATE SET datetime = NOW(), price = ? WHERE stockPriceCash.name = ?;""";
             statement.executeUpdate();
 
             System.out.printf(
-                    "name: %s, datetime: %s, price: %s successfully uploaded to table \"stockPriceCash\"%n",
+                    "name: %s, datetime: %s, price: %s successfully uploaded to table \"stockPriceCache\"%n",
                     name, Utils.epochTimeNow(), price);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -53,7 +53,7 @@ UPDATE SET datetime = NOW(), price = ? WHERE stockPriceCash.name = ?;""";
     }
 
     public Float selectFromYesterday(String name) {
-        String sql = "SELECT name, datetime, price FROM stockPriceCash WHERE datetime >= 'yesterday'::TIMESTAMP  AND name = ?";
+        String sql = "SELECT name, datetime, price FROM stockPriceCache WHERE datetime >= 'yesterday'::TIMESTAMP  AND name = ?";
 
         try (Connection conn = this.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
