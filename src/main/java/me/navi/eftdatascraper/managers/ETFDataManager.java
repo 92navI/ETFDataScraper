@@ -26,13 +26,13 @@ public class ETFDataManager {
 
             return input.body();
         } catch (URISyntaxException | IOException | InterruptedException e) {
-            System.out.println(e);
+            System.out.println(e.getMessage());
             return null;
         }
     }
 
     public StockData sendPriceRequest(String name) {
-        String input = null;
+        String input;
         try {
             var request = HttpRequest.newBuilder()
                     .uri(new URI("https://finnhub.io/api/v1/quote?symbol="
