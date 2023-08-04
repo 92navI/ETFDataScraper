@@ -5,10 +5,10 @@ import java.util.LinkedHashMap;
 
 public class Main {
     public static void main(String[] args) {
-        test();
+        generateTestData();
     }
 
-    private static void test() {
+    private static void generateTestData() {
         var starter = new LambdaStarter();
 
         var map = new LinkedHashMap<String, String>();

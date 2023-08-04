@@ -13,12 +13,13 @@ import org.apache.commons.lang3.StringUtils;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class LambdaStarter {
 
-    private static void setStockValues(ArrayList<StockData> stockDataList, int cash) {
+    private static void processStockValues(List<StockData> stockDataList, int cash) {
         stockDataList.forEach(
                 stockData -> {
                     DecimalFormat df = new DecimalFormat("#.##");
@@ -34,7 +35,7 @@ public class LambdaStarter {
         }
     }
 
-    public ArrayList<StockData> startLambdaFunction(LinkedHashMap<String, String> input) {
+    public List<StockData> startLambdaFunction(LinkedHashMap<String, String> input) {
         int cash = Integer.parseInt(input.get("cash"));
 
         var mapper = new ObjectMapper();
@@ -58,7 +59,7 @@ public class LambdaStarter {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-        ArrayList<StockData> stockDataList = ticker.getData();
+        List<StockData> stockDataList = ticker.getData();
 
 
         stockDataList.parallelStream().forEach(
@@ -67,18 +68,18 @@ public class LambdaStarter {
                     if (!Objects.isNull(stockData.getUrl())) {
                         String id = stockData.getUrl().replace("/stock/", "");
 
-                        priceCacheService.process(stockData, id);
+                        priceCacheService.processCaching(stockData, id);
                     }
                 });
 
 
-        setStockValues(stockDataList, cash);
+        processStockValues(stockDataList, cash);
 
 
         stockDataList = stockDataList.stream()
                 .filter(
                         stockData -> !(stockData.getPrice().equals(0.0f))
-                ).collect(Collectors.toCollection(ArrayList::new));
+                ).collect(Collectors.toList());
 
 
         stockDataList.forEach(

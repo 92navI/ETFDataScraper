@@ -15,7 +15,7 @@ public class PriceCacheService {
         this.etfDataManager = etfDataManager;
     }
 
-    public void process(StockData stockData, String id) {
+    public void processCaching(StockData stockData, String id) {
         Float price = dbManager.selectFromYesterday(id);
         if (!Objects.isNull(price)) {
             stockData.setPrice(price);
