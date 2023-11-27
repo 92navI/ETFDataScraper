@@ -4,12 +4,12 @@ import me.navi.eftdatascraper.utils.Utils;
 
 import java.sql.*;
 
-public class stockPriceCacheDb {
+public class StockPriceCacheDb {
 
     private final String user;
     private final String password;
 
-    public stockPriceCacheDb(String user, String password) {
+    public StockPriceCacheDb(String user, String password) {
         this.user = user;
         this.password = password;
     }

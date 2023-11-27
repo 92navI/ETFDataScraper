@@ -3,9 +3,9 @@ package me.navi.eftdatascraper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import me.navi.eftdatascraper.managers.stockPriceCacheDb;
+import me.navi.eftdatascraper.managers.StockPriceCacheDb;
 import me.navi.eftdatascraper.managers.ETFDataManager;
-import me.navi.eftdatascraper.managers.stockWeightHistoryDb;
+import me.navi.eftdatascraper.managers.StockWeightHistoryDb;
 import me.navi.eftdatascraper.sampleclasses.StockData;
 import me.navi.eftdatascraper.sampleclasses.Ticker;
 
@@ -21,8 +21,8 @@ public class LambdaStarter {
 
     private final ObjectMapper mapper = new ObjectMapper();
     private final ETFDataManager etfDataManager = new ETFDataManager();
-    private final stockPriceCacheDb stockPriceCacheDb = new stockPriceCacheDb("postgres", "12345678");
-    private final stockWeightHistoryDb stockWeightHistoryDb = new stockWeightHistoryDb("postgres", "12345678");
+    private final StockPriceCacheDb stockPriceCacheDb = new StockPriceCacheDb("postgres", "12345678");
+    private final StockWeightHistoryDb stockWeightHistoryDb = new StockWeightHistoryDb("postgres", "12345678");
 
 
     private List<StockData> sendTickerRequest() {

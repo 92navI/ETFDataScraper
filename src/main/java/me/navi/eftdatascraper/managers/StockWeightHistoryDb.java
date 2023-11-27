@@ -8,12 +8,12 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class stockWeightHistoryDb {
+public class StockWeightHistoryDb {
 
     private final String user;
     private final String password;
 
-    public stockWeightHistoryDb(String user, String password) {
+    public StockWeightHistoryDb(String user, String password) {
         this.user = user;
         this.password = password;
     }
