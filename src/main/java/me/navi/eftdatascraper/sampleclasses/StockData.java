@@ -2,7 +2,6 @@ package me.navi.eftdatascraper.sampleclasses;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.apache.commons.lang3.StringUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StockData {
@@ -10,8 +9,8 @@ public class StockData {
     private String name;
     @JsonProperty("weight")
     private String weight;
-    @JsonProperty("symbol")
-    private String symbol;
+    @JsonProperty("url")
+    private String url;
     @JsonProperty("c")
     private Float price = 0.0f;
 
@@ -27,20 +26,20 @@ public class StockData {
         this.name = name;
     }
 
-    public Float getWeight() {
-        return Float.parseFloat(StringUtils.chop(weight));
+    public String getWeight() {
+        return weight;
     }
 
     public void setWeight(String weight) {
         this.weight = weight;
     }
 
-    public String getSymbol() {
-        return symbol;
+    public String getUrl() {
+        return url;
     }
 
-    public void setSymbol(String symbol) {
-        this.symbol = symbol;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public Float getPrice() {
@@ -65,17 +64,5 @@ public class StockData {
 
     public void setAmount(int amount) {
         this.amount = amount;
-    }
-
-    @Override
-    public String toString() {
-        return "\n{\n" +
-                "   name= '" + name + "',\n" +
-                "   weight= '" + weight + "',\n" +
-                "   url= '" + symbol + "',\n" +
-                "   price= " + price + ",\n" +
-                "   value= " + value + ",\n" +
-                "   amount= " + amount + ",\n" +
-                '}';
     }
 }

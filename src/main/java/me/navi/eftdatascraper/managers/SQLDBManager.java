@@ -4,12 +4,14 @@ import me.navi.eftdatascraper.utils.Utils;
 
 import java.sql.*;
 
-public class stockPriceCacheDb {
+public class SQLDBManager {
 
+    private final String url;
     private final String user;
     private final String password;
 
-    public stockPriceCacheDb(String user, String password) {
+    public SQLDBManager(String url, String user, String password) {
+        this.url = url;
         this.user = user;
         this.password = password;
     }
@@ -17,7 +19,6 @@ public class stockPriceCacheDb {
     private Connection connect() {
         Connection conn = null;
         try {
-            String url = "jdbc:postgresql://etf-db3.cimx9kb6higa.us-west-2.rds.amazonaws.com/";
             conn = DriverManager.getConnection(url, user, password);
 
         } catch (SQLException e) {
@@ -27,7 +28,7 @@ public class stockPriceCacheDb {
     }
 
 
-    public void replace(String name, Float price) {
+    public void replace(String name, String price) {
         String sql = """
                 INSERT INTO stockPriceCache(name, datetime, price)
                 VALUES(?, NOW(), ?)\s
@@ -38,8 +39,8 @@ public class stockPriceCacheDb {
         try (Connection conn = this.connect();
              PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setString(1, name);
-            statement.setFloat(2, price);
-            statement.setFloat(3, price);
+            statement.setString(2, price);
+            statement.setString(3, price);
             statement.setString(4, name);
             statement.executeUpdate();
 
@@ -62,12 +63,9 @@ public class stockPriceCacheDb {
 
             ResultSet rs = pstmt.executeQuery();
 
-            Float[] output = new Float[1];
             while (rs.next()) {
-                output[0] = rs.getFloat("price");
+                return rs.getFloat("price");
             }
-
-            return output[0];
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
