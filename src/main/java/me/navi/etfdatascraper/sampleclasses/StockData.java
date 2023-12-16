@@ -28,11 +28,6 @@ public class StockData {
     public Float getWeight() {
         return Float.parseFloat(StringUtils.chop(weight));
     }
-
-    public void setWeight(String weight) {
-        this.weight = weight;
-    }
-
     @Override
     public String toString() {
         return Utils.prettyToString(this);
