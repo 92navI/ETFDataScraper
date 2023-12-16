@@ -1,4 +1,4 @@
-package me.navi.eftdatascraper;
+package me.navi.etfdatascraper;
 
 import static org.junit.Assert.assertTrue;
 
