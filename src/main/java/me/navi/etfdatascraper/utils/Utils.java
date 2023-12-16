@@ -1,4 +1,4 @@
-package me.navi.eftdatascraper.utils;
+package me.navi.etfdatascraper.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

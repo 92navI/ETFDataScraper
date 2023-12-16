@@ -1,8 +1,9 @@
-package me.navi.eftdatascraper.managers;
+package me.navi.etfdatascraper.managers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import me.navi.eftdatascraper.sampleclasses.StockData;
+import lombok.extern.slf4j.Slf4j;
+import me.navi.etfdatascraper.sampleclasses.StockData;
 
 import java.io.IOException;
 import java.net.URI;
@@ -11,7 +12,9 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+@Slf4j
 public class ETFDataManager {
+
     public static String URL = "https://apiprod.etf.com/private/fund/PP/holdings?type=securities&formatValues=true";
 
     public static String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36";
@@ -19,6 +22,7 @@ public class ETFDataManager {
     public static String X_LIMIT = "1000";
 
     public static String AUTHORIZATION = "Bearer 0QE2aa6trhK3hOmkf5zXwz6Riy7UWdk4V6HYw3UdZcRZV3myoV9MOfwNLL6FKHrpTN7IF7g12GSZ6r44jAfjte0B3APAaQdWRWZtW2qhYJrAXXwkpYJDFdkCng97prr7N4JAXkCI1zB7EiXrFEY8CIQclMLgQk2XHBZJiqJSIEgtWckHK3UPLfm12X9rhME9ac7gvcF3fWDo8A66X6RHXr3g9jzKeC62th75S1t6juvWjQYDCz65i7UlRfTVWDVV";
+
     public String sendETFRequest() {
         try {
             var request = HttpRequest.newBuilder()
@@ -31,7 +35,7 @@ public class ETFDataManager {
 
             return input.body();
         } catch (URISyntaxException | IOException | InterruptedException e) {
-            System.out.println(e.getMessage());
+            log.error("Error while trying to fetch ticker data", e);
             return null;
         }
     }
@@ -47,7 +51,7 @@ public class ETFDataManager {
             input = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString()).body();
 
         } catch (URISyntaxException | IOException | InterruptedException e) {
-            System.out.println(e.getMessage());
+            log.error("Error while trying to fetch price data of: " + name, e);
             return null;
         }
 
@@ -56,7 +60,7 @@ public class ETFDataManager {
         try {
             price = mapper.readValue(input, StockData.class);
         } catch (JsonProcessingException e) {
-            System.out.println(e.getMessage());
+            log.error("Error while trying to parse price data of: " + name, e);
         }
         return price;
 

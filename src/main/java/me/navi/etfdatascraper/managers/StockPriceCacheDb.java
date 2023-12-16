@@ -1,33 +1,17 @@
-package me.navi.eftdatascraper.managers;
+package me.navi.etfdatascraper.managers;
 
-import me.navi.eftdatascraper.utils.Utils;
+import lombok.extern.slf4j.Slf4j;
+import me.navi.etfdatascraper.utils.Utils;
+import java.sql.Connection;
 
 import java.sql.*;
 
+@Slf4j
 public class StockPriceCacheDb {
 
-    private final String user;
-    private final String password;
+    public static final String PRICE = "price";
 
-    public StockPriceCacheDb(String user, String password) {
-        this.user = user;
-        this.password = password;
-    }
-
-    private Connection connect() {
-        Connection conn = null;
-        try {
-            String url = "jdbc:postgresql://etf-db3.cimx9kb6higa.us-west-2.rds.amazonaws.com/";
-            conn = DriverManager.getConnection(url, user, password);
-
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return conn;
-    }
-
-
-    public void replace(String name, Float price) {
+    public static void upsert(String name, Float price) {
         String sql = """
                 INSERT INTO stockPriceCache(name, datetime, price)
                 VALUES(?, NOW(), ?)\s
@@ -35,7 +19,7 @@ public class StockPriceCacheDb {
                 DO\s
                 UPDATE SET datetime = NOW(), price = ? WHERE stockPriceCache.name = ?;""";
 
-        try (Connection conn = this.connect();
+        try (Connection conn = DbConnection.connect();
              PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setString(1, name);
             statement.setFloat(2, price);
@@ -43,18 +27,18 @@ public class StockPriceCacheDb {
             statement.setString(4, name);
             statement.executeUpdate();
 
-            System.out.printf(
-                    "name: %s, datetime: %s, price: %s successfully uploaded to table \"stockPriceCache\"%n",
+            log.info(
+                    "name: {}, datetime: {}, price: {} successfully uploaded to table \"stockPriceCache\"",
                     name, Utils.epochTimeNow(), price);
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.error("SQL Error while trying to upsert data into caching.", e);
         }
     }
 
-    public Float selectFromYesterday(String name) {
+    public static Float selectFromYesterday(String name) {
         String sql = "SELECT name, datetime, price FROM stockPriceCache WHERE datetime >= 'yesterday'::TIMESTAMP  AND name = ?";
 
-        try (Connection conn = this.connect();
+        try (Connection conn = DbConnection.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, name);
@@ -64,13 +48,13 @@ public class StockPriceCacheDb {
 
             Float[] output = new Float[1];
             while (rs.next()) {
-                output[0] = rs.getFloat("price");
+                output[0] = rs.getFloat(PRICE);
             }
 
             return output[0];
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            log.error("SQL Error while trying to select caching.", e);
         }
         return null;
     }

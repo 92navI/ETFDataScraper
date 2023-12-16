@@ -1,4 +1,4 @@
-package me.navi.eftdatascraper.sampleclasses;
+package me.navi.etfdatascraper.sampleclasses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
